@@ -397,6 +397,90 @@ function getSiteStats(site) {
   return { total, done, inProgress, pending, avgProgress };
 }
 
+
+let currentServiceTab = 'ACTIVE';
+
+function setServiceProjectTab(tab) {
+  currentServiceTab = tab;
+  const btnActive = document.getElementById('tabServiceActive');
+  const btnCompleted = document.getElementById('tabServiceCompleted');
+  if (btnActive && btnCompleted) {
+    if (tab === 'ACTIVE') {
+      btnActive.style.background = '#2563eb';
+      btnActive.style.color = '#ffffff';
+      btnCompleted.style.background = 'transparent';
+      btnCompleted.style.color = '#94a3b8';
+    } else {
+      btnCompleted.style.background = '#2563eb';
+      btnCompleted.style.color = '#ffffff';
+      btnActive.style.background = 'transparent';
+      btnActive.style.color = '#94a3b8';
+    }
+  }
+  renderSites();
+}
+
+function openCompleteModal(siteId, siteName) {
+  document.getElementById('completeSiteIdInput').value = siteId;
+  document.getElementById('completeSiteTitleDisplay').innerText = siteName;
+  document.getElementById('completeSiteNoteInput').value = '';
+  const modal = document.getElementById('modalCompleteSite');
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeCompleteModal() {
+  const modal = document.getElementById('modalCompleteSite');
+  if (modal) modal.style.display = 'none';
+}
+
+async function confirmCompleteServiceSite() {
+  const siteId = document.getElementById('completeSiteIdInput').value;
+  const note = document.getElementById('completeSiteNoteInput').value.trim();
+  const site = sitesData.find(s => s.id === siteId);
+  if (!site) return;
+
+  site.status = 'COMPLETED';
+  site.completed_at = new Date().toISOString();
+  site.completed_by = 'Super Admin';
+  site.completion_note = note;
+
+  // Persist locally & server if available
+  saveSitesDataLocally();
+  try {
+    await fetch(`${API_BASE_URL}/api/sites/${siteId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(site)
+    });
+  } catch (e) {}
+
+  closeCompleteModal();
+  renderSites();
+}
+
+async function reopenServiceSite(siteId, siteName, event) {
+  if (event) event.stopPropagation();
+  if (!confirm(`Are you sure you want to reopen project "${siteName}" and return it to Active Projects?`)) return;
+
+  const site = sitesData.find(s => s.id === siteId);
+  if (!site) return;
+
+  site.status = 'ACTIVE';
+  site.completed_at = null;
+  site.completion_note = '';
+
+  saveSitesDataLocally();
+  try {
+    await fetch(`${API_BASE_URL}/api/sites/${siteId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(site)
+    });
+  } catch (e) {}
+
+  renderSites();
+}
+
 // Render Sites Directory
 function renderSites() {
   const container = document.getElementById('sitesGridContainer');

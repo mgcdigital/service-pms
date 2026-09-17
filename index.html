@@ -331,6 +331,35 @@
 
   </main>
 
+  <!-- Complete Service Site Modal -->
+  <div class="modal-overlay" id="modalCompleteSite" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.7); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: #1e293b; color: #f8fafc; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px; max-width: 420px; width: 90%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Mark Project as Completed
+        </h3>
+        <button onclick="closeCompleteModal()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">&times;</button>
+      </div>
+      <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 14px;">
+        Are you sure you want to mark <strong id="completeSiteTitleDisplay" style="color: #60a5fa;"></strong> as completed?
+      </p>
+      <div style="margin-bottom: 18px;">
+        <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px;">
+          Optional Completion Note
+        </label>
+        <textarea id="completeSiteNoteInput" rows="2" placeholder="e.g. Site execution, commissioning and handover completed" style="width: 100%; background: #0f172a; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 8px; color: #ffffff; font-size: 12px; outline: none;"></textarea>
+      </div>
+      <input type="hidden" id="completeSiteIdInput">
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" onclick="closeCompleteModal()" style="padding: 8px 14px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #cbd5e1; border-radius: 8px; font-size: 12px; cursor: pointer;">Cancel</button>
+        <button type="button" onclick="confirmCompleteServiceSite()" style="padding: 8px 16px; background: #10b981; border: none; color: #ffffff; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-check"></i> Confirm Completion
+        </button>
+      </div>
+    </div>
+  </div>
+
+
   <!-- ================= BOTTOM NAVIGATION DOCK ================= -->
   <nav class="bottom-dock">
     <div class="dock-pill">
